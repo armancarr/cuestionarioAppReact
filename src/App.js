@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { Routes, Route } from "react-router-dom"
+import {AddCuestionario} from "./pages/AddCuestionario";
+import AddPregunta from "./pages/AddPregunta";
+import {EditCuestionario} from "./pages/EditCuestionario";
+import { Home } from "./pages/Home";
+import {HomePreguntas} from "./pages/HomePreguntas";
+import {EditPregunta} from "./pages/EditPregunta"
+import HomeRespuestas from "./pages/HomeRespuestas";
+import AddRespuesta from "./pages/AddRespuesta";
+import PlayCuestionario from "./pages/PlayCuestionario";
 function App() {
+  console.log(process.env.REACT_APP_CUESTIONARIO_API);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+    <div className="app container">
+      <Routes>
+        <Route path='/' element={<Home/>} />
+        <Route path="/addCuestionario" element={<AddCuestionario/>} />
+        <Route path="/editCuestionario/:id" element={<EditCuestionario/>} />
+        <Route path='/playCuestionario/:id' element={<PlayCuestionario/>} />
+        <Route path='/homePreguntas/:id' element={<HomePreguntas/>} />
+        <Route path='/addPregunta/:id' element={<AddPregunta/>} />
+        <Route path='/editPregunta/:idCuestionario/:idPregunta' element={<EditPregunta/>} />
+        <Route path='/homeRespuestas/:idCuestionario/:idPregunta' element={<HomeRespuestas/>} />
+        <Route path='/addRespuesta/:idCuestionario/:idPregunta' element={<AddRespuesta/>} />
+      </Routes>
     </div>
   );
 }
