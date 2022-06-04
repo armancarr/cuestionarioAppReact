@@ -86,6 +86,12 @@ const respuestaAdded = (cuestionario) => ({
         preguntas:cuestionario.preguntas
     }
 });
+const getResultados = (resultados) => ({
+    type: types.ADD_RESPUESTA,
+    payload: {
+        resultados
+    }
+});
 export const loadCuestionarios = () => {
     return function(dispatch){
         axios.get(`${process.env.REACT_APP_CUESTIONARIO_API}/getAll`)
@@ -252,6 +258,45 @@ export const addRespuestas = (cuestionario, pregunta, respuesta) => {
             console.log('resp',resp);
             dispatch(respuestaAdded(payload));
             dispatch(loadRespuestas(cuestionario.idCuestionario, pregunta.id));
+        }))
+        .catch((error)=> console.log(error));
+    };
+};
+
+export const loadPreguntasJuego = (id) => {
+    return function(dispatch){
+        let payload={
+            idCuestionario:id
+        }
+        axios.post(`${process.env.REACT_APP_CUESTIONARIO_API}/get`,payload)
+        .then((resp=>{
+            console.log('resp',resp);
+            let playPreguntas= resp.data.data.preguntas.map((pregunta) => {return {...pregunta,respuestaSel:""}})
+            dispatch(getPreguntas(resp.data.data, playPreguntas));
+
+        }))
+        .catch((error)=> console.log(error));
+    };
+};
+
+export const addRespuestaCuestionarioUser = (id,respuestas) => {
+    return function(dispatch){
+        let respCuestionario=respuestas.preguntas.map((respuesta) => {
+            return {
+                pregunta:respuesta.pregunta,
+                respuestaUser: respuesta.respuestas.find(r=>r.id=== respuesta.respuestaSel).respuesta,
+                esCorrecta: respuesta.respuestas.find(r=>r.id=== respuesta.respuestaSel).esCorrecta,
+            }
+        });
+        let payload={
+            idUsuario:"1", // TODO: Cambiar con el login
+            idCuestionario:id,
+            respCuestionario
+        }
+        axios.post(`${process.env.REACT_APP_CUESTIONARIO_API}Resultado/saveRespuestas`,payload)
+        .then((resp=>{
+            console.log('resp',resp);
+            dispatch(getResultados(respCuestionario));
         }))
         .catch((error)=> console.log(error));
     };

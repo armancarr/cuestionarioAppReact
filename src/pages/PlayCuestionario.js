@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import {useDispatch,useSelector} from 'react-redux';
-import { loadPreguntas } from '../redux/actions';
+import { loadPreguntasJuego,addRespuestaCuestionarioUser } from '../redux/actions';
 import { useNavigate, useParams } from  "react-router-dom";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -42,38 +42,45 @@ export const PlayCuestionario = () => {
     let navigate = useNavigate();
     let {id} = useParams();
     useEffect(()=>{
-        dispatch(loadPreguntas(id));
+        dispatch(loadPreguntasJuego(id));
     },[dispatch,id]);
-    const { preguntas } = useSelector(state => state.data);
+    let { preguntas } = useSelector(state => state.data);
+
+    // preguntas = preguntas.map((pregunta) => {return {...pregunta,respuestaSel:""}})
     const [state,setState] =useState({
-        preguntas,
-        respuestasSeleccionadas:[]
+        preguntas
     });
-    const { respuestasSeleccionadas } = useSelector(state => state.data);
-    const [respuesta, setRespuesta] = React.useState('');
+
+    useEffect(()=>{
+      if(preguntas){
+          setState({preguntas})
+      }
+    },[preguntas]);
 
     const handleChange = (event) => {
-        setRespuesta(event.target.value);
+        // setRespuesta(event.target.value);
+        event.preventDefault();
+        state.preguntas.find(value=>value.id === event.target.name).respuestaSel=event.target.value;
+        setState ({...state})
     };
 
     const [error,setError] = useState("");
 
-    // const handleSubmit = (e) =>{
-    //     e.preventDefault();
-    //     if(true){
-    //         setError("Por favor complete la información");
-    //     }else{
-    //         // dispatch(addCuestionarios({idCuestionario,nombre,state:true,preguntas:[]}));
-    //         console.log("aqui",state);
-    //         dispatch(addPreguntas(state.cuestionario, state.pregunta));
-    //         navigate(`/homePreguntas/${idCuestionario}`);
-    //         setError("");
-    //     }
-    // };
+     const handleSubmit = () =>{
+         // e.preventDefault();
+         if(preguntas.find(value=> value.respuestaSel==="")){
+             setError("Por favor complete la información");
+         }else{
+             // dispatch(addCuestionarios({idCuestionario,nombre,state:true,preguntas:[]}));
+             dispatch(addRespuestaCuestionarioUser(id,state));
+             navigate(`/getResultados`);
+             setError("");
+         }
+     };
     return (
         <div>
             {error && <h3 style={{color: "red"}}>{error}</h3>}
-            <Button variant='contained' color="primary">Enviar</Button>
+            <Button variant='contained' color="primary" onClick={()=>handleSubmit()}>Enviar</Button>
             <Button variant='contained' onClick={()=>navigate("/")} color="secondary">Regresar</Button>
                 <TableContainer component={Paper}>
         <Table sx={{ minWidth: 900, marginTop:1 }} aria-label="customized table">
@@ -96,10 +103,11 @@ export const PlayCuestionario = () => {
                     <InputLabel id="demo-simple-select-label">Opciones:</InputLabel>
                     <Select
                     labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={respuesta}
+                    id={row.id}
+                    value={row.respuestaSel}
                     label="Opciones"
                     onChange={handleChange}
+                    name={row.id}
                     >
                     {row.respuestas && row.respuestas.map((r) => (
                     <MenuItem value={r.id}>{r.respuesta}</MenuItem>

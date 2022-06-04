@@ -48,9 +48,16 @@ export const HomeRespuestas = () => {
             dispatch(deleteRespuestas(cuestionario,pregunta,respuesta));
         }
     };
+    const handleAdd =() =>{
+        if(respuestas.length >=10){
+            alert("Ya tiene 10 opciones de respuesta! Para agregar una por favor borrar alguna existente!");
+        }else{
+            navigate(`/addRespuesta/${idCuestionario}/${idPregunta}`)
+        }
+    };
     return (
         <div>
-            <Button variant='contained' onClick={()=>navigate(`/addRespuesta/${idCuestionario}/${idPregunta}`)} color="primary">Crear Respuesta</Button>
+            <Button variant='contained' onClick={()=>handleAdd()} color="primary">Crear Respuesta</Button>
             <Button variant='contained' onClick={()=>navigate(`/homePreguntas/${idCuestionario}`)} color="secondary">Regresar</Button>
                 <TableContainer component={Paper}>
         <Table sx={{ minWidth: 900, marginTop:1 }} aria-label="customized table">
@@ -72,7 +79,6 @@ export const HomeRespuestas = () => {
                 <StyledTableCell>{row.esCorrecta?"Si":"No"}</StyledTableCell>
                 <StyledTableCell align="center">
                     <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                        <Button color="primary" onClick={()=> navigate(`/editRespuesta/${idCuestionario}/${idPregunta}/${row.id}`)}>Editar</Button>
                         <Button color="error" onClick={()=>handleDelete(row)} >Eliminar</Button>
                     </ButtonGroup>
                 </StyledTableCell>

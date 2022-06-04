@@ -41,7 +41,6 @@ export const EditPregunta = () => {
             setError("Por favor complete la información");
         }else{
             // dispatch(addCuestionarios({idCuestionario,nombre,state:true,preguntas:[]}));
-            console.log("aqui",state);
             dispatch(addPreguntas(state.cuestionario, state.pregunta));
             navigate(`/homePreguntas/${idCuestionario}`);
             setError("");

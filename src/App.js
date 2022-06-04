@@ -8,8 +8,9 @@ import {EditPregunta} from "./pages/EditPregunta"
 import HomeRespuestas from "./pages/HomeRespuestas";
 import AddRespuesta from "./pages/AddRespuesta";
 import PlayCuestionario from "./pages/PlayCuestionario";
+import GetResultados from "./pages/GetResultados";
 function App() {
-  console.log(process.env.REACT_APP_CUESTIONARIO_API);
+
   return (
 
     <div className="app container">
@@ -23,6 +24,7 @@ function App() {
         <Route path='/editPregunta/:idCuestionario/:idPregunta' element={<EditPregunta/>} />
         <Route path='/homeRespuestas/:idCuestionario/:idPregunta' element={<HomeRespuestas/>} />
         <Route path='/addRespuesta/:idCuestionario/:idPregunta' element={<AddRespuesta/>} />
+        <Route path='/getResultados' element={<GetResultados/>} />
       </Routes>
     </div>
   );
