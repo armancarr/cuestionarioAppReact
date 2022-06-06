@@ -3,7 +3,8 @@ import * as types from './actionType';
 const initialState = {
     cuestionarios:[],
     cuestionario:{},
-    loading: true
+    loading: true,
+    isLogin: false
 };
 
 const cuestionariosReducers = (state = initialState, action)=>{
@@ -82,7 +83,9 @@ const cuestionariosReducers = (state = initialState, action)=>{
                 pregunta: action.payload.pregunta,
                 respuesta: action.payload.respuesta,
                 loading: false
-            };                                                          
+            };   
+        case types.LOG_IN:
+            return { ...state, isLogin: action.payload };                                                       
         default:
             return state;
     }

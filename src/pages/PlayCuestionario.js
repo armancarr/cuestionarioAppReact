@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import {useDispatch,useSelector} from 'react-redux';
-import { loadPreguntasJuego,addRespuestaCuestionarioUser } from '../redux/actions';
+import { loadPreguntasJuego,addRespuestaCuestionarioUser,login } from '../redux/actions';
 import { useNavigate, useParams } from  "react-router-dom";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -44,7 +44,7 @@ export const PlayCuestionario = () => {
     useEffect(()=>{
         dispatch(loadPreguntasJuego(id));
     },[dispatch,id]);
-    let { preguntas } = useSelector(state => state.data);
+    let { preguntas,isLogin } = useSelector(state => state.data);
 
     // preguntas = preguntas.map((pregunta) => {return {...pregunta,respuestaSel:""}})
     const [state,setState] =useState({
@@ -72,13 +72,24 @@ export const PlayCuestionario = () => {
              setError("Por favor complete la información");
          }else{
              // dispatch(addCuestionarios({idCuestionario,nombre,state:true,preguntas:[]}));
-             dispatch(addRespuestaCuestionarioUser(id,state));
+             dispatch(addRespuestaCuestionarioUser(id,state,isLogin));
              navigate(`/getResultados`);
              setError("");
          }
      };
     return (
         <div>
+            <div align="right">
+                <Button
+                variant='contained' color='error'
+                onClick={() => {
+                dispatch(login(false));
+                navigate("/");
+                }}
+                >
+                Salir
+                </Button>
+            </div>
             {error && <h3 style={{color: "red"}}>{error}</h3>}
             <Button variant='contained' color="primary" onClick={()=>handleSubmit()}>Enviar</Button>
             <Button variant='contained' onClick={()=>navigate("/")} color="secondary">Regresar</Button>

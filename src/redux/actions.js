@@ -92,6 +92,12 @@ const getResultados = (resultados) => ({
         resultados
     }
 });
+
+const usuarioAdded = (usuario) => ({
+    type: types.ADD_USUARIO,
+    payload: usuario
+});
+
 export const loadCuestionarios = () => {
     return function(dispatch){
         axios.get(`${process.env.REACT_APP_CUESTIONARIO_API}/getAll`)
@@ -279,7 +285,7 @@ export const loadPreguntasJuego = (id) => {
     };
 };
 
-export const addRespuestaCuestionarioUser = (id,respuestas) => {
+export const addRespuestaCuestionarioUser = (id,respuestas,user) => {
     return function(dispatch){
         let respCuestionario=respuestas.preguntas.map((respuesta) => {
             return {
@@ -289,7 +295,7 @@ export const addRespuestaCuestionarioUser = (id,respuestas) => {
             }
         });
         let payload={
-            idUsuario:"1", // TODO: Cambiar con el login
+            idUsuario:user, // TODO: Cambiar con el login
             idCuestionario:id,
             respCuestionario
         }
@@ -301,3 +307,37 @@ export const addRespuestaCuestionarioUser = (id,respuestas) => {
         .catch((error)=> console.log(error));
     };
 };
+
+export const doLogin = (usuario) => {
+    return function(dispatch){
+        let payload={
+            email:usuario.email,
+            password:usuario.pwd
+        }
+        axios.post(`${process.env.REACT_APP_CUESTIONARIO_API_USER}/get`,payload)
+        .then((resp=>{
+            console.log('resp',resp);
+            dispatch(login(resp.data.data===true?usuario.email:false));
+        }))
+        .catch((error)=> console.log(error));
+    };
+};
+
+export const addUsuario = (usuario) => {
+    return function(dispatch){
+        let payload={
+            email:usuario.email,
+            password:usuario.pwd
+        }
+        axios.post(`${process.env.REACT_APP_CUESTIONARIO_API_USER}/save`,payload)
+        .then((resp=>{
+            console.log('resp',resp);
+            dispatch(usuarioAdded(usuario.email));
+        }))
+        .catch((error)=> console.log(error));
+    };
+};
+export const login = (isLogin) => ({
+    type: types.LOG_IN,
+    payload: isLogin
+});

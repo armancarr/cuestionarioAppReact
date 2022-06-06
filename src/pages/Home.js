@@ -10,7 +10,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import {useDispatch,useSelector} from 'react-redux';
-import { deleteCuestionarios, loadCuestionarios } from '../redux/actions';
+import { deleteCuestionarios, loadCuestionarios, login } from '../redux/actions';
 import { useNavigate } from  "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -48,6 +48,18 @@ export const Home = () => {
     };
     return (
         <div>
+            <div align="right">
+                <Button
+                variant='contained' color='error'
+                onClick={() => {
+                dispatch(login(false));
+                navigate("/");
+                }}
+                >
+                Salir
+                </Button>
+                
+            </div>
             <Button variant='contained' onClick={()=>navigate("/addCuestionario")} color="primary">Crear Cuestionario</Button>
                 <TableContainer component={Paper}>
         <Table sx={{ minWidth: 900, marginTop:1 }} aria-label="customized table">
